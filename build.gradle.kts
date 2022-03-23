@@ -3,6 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.6.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+
+    kotlin("plugin.allopen") version "1.6.10"
+    kotlin("plugin.noarg") version "1.6.10"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
     kotlin("plugin.jpa") version "1.6.10"
@@ -17,6 +20,27 @@ repositories {
     mavenCentral()
 }
 
+
+buildscript {
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
+        classpath("org.jetbrains.kotlin:kotlin-noarg:1.6.10")
+    }
+}
+
+
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
+}
+
+noArg {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
+}
+
 extra["springCloudVersion"] = "2021.0.0"
 
 dependencyManagement {
@@ -24,6 +48,7 @@ dependencyManagement {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
     }
 }
+
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
@@ -43,6 +68,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
+
 
     implementation("mysql:mysql-connector-java")
     implementation("com.querydsl:querydsl-jpa") // querydsl

@@ -1,6 +1,8 @@
 package com.brandjunhoe.productservice.review.domain
 
 import com.brandjunhoe.productservice.common.domain.DateColumnEntity
+import com.brandjunhoe.productservice.product.domain.ItemCode
+import com.brandjunhoe.productservice.product.domain.ProductCode
 import com.brandjunhoe.productservice.review.domain.enums.ReviewTypeEnum
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Where
@@ -18,20 +20,23 @@ class Review(
     @Column(columnDefinition = "BINARY(16)")
     val id: UUID = UUID.randomUUID(),
 
-    @Column(name = "name", length = 100)
-    val name: String,
+    @Embedded
+    val productCode: ProductCode,
+
+    @Embedded
+    val itemCode: ItemCode,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", columnDefinition = "enum", nullable = false)
     val type: ReviewTypeEnum,
 
-    @Column(name = "store", nullable = false)
+    @Column(name = "score", nullable = false)
     val score: Int,
 
     @Column(name = "contents", nullable = false)
     val contents: String,
 
-    @Column(name = "supplier_price")
+    @Column(name = "mileage")
     val mileage: Int = 0,
 
     @ElementCollection

@@ -4,7 +4,6 @@ import com.brandjunhoe.productservice.common.domain.DateColumnEntity
 import com.brandjunhoe.productservice.product.domain.enums.ProductGradeLimitEnum
 import com.brandjunhoe.productservice.product.domain.enums.ProductTypeEnum
 import org.hibernate.annotations.ColumnDefault
-import org.hibernate.annotations.Where
 import javax.persistence.*
 
 @Entity
@@ -59,19 +58,20 @@ class Product(
     val totalSaleCount: Int = 0,
 
     @Column(name = "memo")
-    val memo: String? = null
+    val memo: String? = null,
 
-    /*  @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
-      val shippingAddress: MutableList<UserShippingAddress> = mutableListOf(),
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "product", cascade = [CascadeType.PERSIST])
+    val mainImage: ProductMainImage
 
-      @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
-      val mileages: MutableList<UserMileage> = mutableListOf(),
+    /*@ElementCollection
+    @CollectionTable(name = "item", joinColumns = [JoinColumn(name = "product_code")])
+    //@OrderColumn(name = "line_idx")
+    val items: List<Item> = listOf()*/
 
-      @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
-      val wishs: MutableList<Wish> = mutableListOf(),
+    /*@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = [CascadeType.PERSIST])
+    @Where(clause = "display_state = true")
+    val items: List<Item> = listOf()*/
 
-      @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
-      val carts: MutableList<Cart> = mutableListOf()*/
 
 ) : DateColumnEntity() {
 

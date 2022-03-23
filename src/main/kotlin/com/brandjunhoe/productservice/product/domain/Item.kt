@@ -7,22 +7,29 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "item")
-@Where(clause = "deldate IS NOT NULL")
+@Where(clause = "deldate IS NULL")
 class Item(
 
     @EmbeddedId
     val itemCode: ItemCode,
 
-    @Column(name = "name", length = 255)
+    @Embedded
+    val productCode: ProductCode,
+    /*@ManyToOne(targetEntity = Product::class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_code")
+    val product: Product,*/
+
+
+    @Column(name = "name", length = 255, nullable = false)
     val name: String,
 
-    @Column(name = "value", length = 255)
+    @Column(name = "value", length = 255, nullable = false)
     val value: String,
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     val quantity: Int,
 
-    @Column(name = "safety_stock_quantity")
+    @Column(name = "safety_stock_quantity", nullable = false)
     val safetyStockQuantity: Int,
 
     @Enumerated(EnumType.STRING)

@@ -10,7 +10,7 @@ import javax.persistence.Embeddable
 @Embeddable
 class ItemCode(itemCode: String) : Serializable {
 
-    @Column(name = "itemCode")
+    @Column(name = "item_code")
     private val itemCode: String = itemCode
 
 
