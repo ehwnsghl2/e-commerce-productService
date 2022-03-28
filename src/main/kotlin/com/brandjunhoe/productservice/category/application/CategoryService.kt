@@ -2,6 +2,7 @@ package com.brandjunhoe.productservice.category.application
 
 import com.brandjunhoe.productservice.category.application.dto.CategoryDTO
 import com.brandjunhoe.productservice.category.domain.Category
+import com.brandjunhoe.productservice.category.domain.CategoryCode
 import com.brandjunhoe.productservice.category.domain.CategoryRepository
 import org.springframework.stereotype.Service
 
@@ -39,6 +40,10 @@ class CategoryService(val categoryRepository: CategoryRepository) {
                 )
             }
         } ?: run { null }
+
+
+    fun findRefCategorys(categoryCode: String): List<Category> =
+        categoryRepository.findByCategoryCodeOrRefAndDisplayStateIsTrue(CategoryCode(categoryCode), categoryCode)
 
 
 }

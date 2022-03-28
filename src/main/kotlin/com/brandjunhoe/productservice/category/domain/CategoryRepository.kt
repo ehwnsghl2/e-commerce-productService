@@ -5,5 +5,6 @@ package com.brandjunhoe.productservice.category.domain
  */
 interface CategoryRepository {
     fun findAllByDisplayStateIsTrueOrderBySortAsc(): List<Category>
+    fun findByCategoryCodeOrRefAndDisplayStateIsTrue(categoryCode: CategoryCode, ref: String): List<Category>
 
 }

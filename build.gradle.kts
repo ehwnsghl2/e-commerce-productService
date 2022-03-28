@@ -39,7 +39,9 @@ noArg {
     annotation("javax.persistence.Entity")
     annotation("javax.persistence.MappedSuperclass")
     annotation("javax.persistence.Embeddable")
+    annotation("com.lindroid.projectname.annotation.NoArg")
 }
+
 
 extra["springCloudVersion"] = "2021.0.0"
 

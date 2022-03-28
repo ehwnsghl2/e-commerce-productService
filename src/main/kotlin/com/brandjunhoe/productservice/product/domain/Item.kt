@@ -13,12 +13,9 @@ class Item(
     @EmbeddedId
     val itemCode: ItemCode,
 
-    @Embedded
-    val productCode: ProductCode,
-    /*@ManyToOne(targetEntity = Product::class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Product::class, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_code")
-    val product: Product,*/
-
+    val product: Product,
 
     @Column(name = "name", length = 255, nullable = false)
     val name: String,

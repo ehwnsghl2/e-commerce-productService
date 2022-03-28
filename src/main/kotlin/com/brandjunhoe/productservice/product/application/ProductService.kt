@@ -1,11 +1,14 @@
 package com.brandjunhoe.productservice.product.application
 
+import com.brandjunhoe.productservice.category.domain.CategoryCode
 import com.brandjunhoe.productservice.common.exception.DataNotFoundException
 import com.brandjunhoe.productservice.product.application.dto.ItemOptionValueDTO
 import com.brandjunhoe.productservice.product.application.dto.ItemOptionsDTO
 import com.brandjunhoe.productservice.product.application.dto.ProductDTO
+import com.brandjunhoe.productservice.product.application.dto.ProductSearchDTO
 import com.brandjunhoe.productservice.product.domain.ItemRepository
 import com.brandjunhoe.productservice.product.domain.ProductCode
+import com.brandjunhoe.productservice.product.domain.ProductCustomRepository
 import com.brandjunhoe.productservice.product.domain.ProductRepository
 import com.brandjunhoe.productservice.product.presentation.dto.ResProductDetailDTO
 import org.springframework.stereotype.Service
@@ -14,7 +17,11 @@ import org.springframework.stereotype.Service
  * Create by DJH on 2022/03/21.
  */
 @Service
-class ProductService(val productRepository: ProductRepository, val itemRepository: ItemRepository) {
+class ProductService(
+    val productRepository: ProductRepository,
+    val productCustomRepository: ProductCustomRepository,
+    val itemRepository: ItemRepository
+) {
 
     //findTop10ByOrderByRentCntDesc
     fun findTop8Products(): List<ProductDTO> {
@@ -24,28 +31,37 @@ class ProductService(val productRepository: ProductRepository, val itemRepositor
 
     }
 
-    fun detail(productCode: ProductCode): ResProductDetailDTO {
+    fun detail(productCode: String): ResProductDetailDTO {
         println("productCode : $productCode")
         val product =
             productRepository.findByProductCode(
-                productCode
+                ProductCode(productCode)
             ) ?: throw DataNotFoundException("product data not found")
 
 
-        val item = itemRepository.findByProductCode(productCode)
+        val items = product.items
 
-        val items = item.groupBy { it.name }
+        val itemGroup = items.groupBy { it.name }
 
-
-        val options = items.map { (name, value) ->
+        val options = itemGroup.map { (name, value) ->
             ItemOptionsDTO(
                 name,
                 value.map { ItemOptionValueDTO(it.value, it.quantity, it.addPrice, it.sellingState) })
         }
 
-
         return ResProductDetailDTO(product.name, product.mainImage.path ?: "", options)
 
     }
+
+    fun findCategoryProducts(categoryCodes: List<String>): List<ProductSearchDTO> {
+        return productCustomRepository.findByCategoryCodesIn(categoryCodes)
+
+        /*   productRepository.findByCategoryCodesCategoryCodeIn(categoryCodes)
+               .map {
+                   println(it.productCode.productCode)
+                   ProductSearchDTO(it) }
+   */
+    }
+
 
 }
