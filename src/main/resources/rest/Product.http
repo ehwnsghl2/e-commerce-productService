@@ -1,4 +1,4 @@
-GET http://localhost:9002/product?categoryCode=cate5
+GET http://localhost:9002/product/category?categoryCode=cate2
 Content-Type: application/json
 
 

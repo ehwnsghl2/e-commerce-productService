@@ -1,6 +1,7 @@
 package com.brandjunhoe.productservice.review.domain
 
 import com.brandjunhoe.productservice.common.domain.DateColumnEntity
+import com.brandjunhoe.productservice.common.domain.DateDeleteColumnEntity
 import com.brandjunhoe.productservice.product.domain.ItemCode
 import com.brandjunhoe.productservice.product.domain.ProductCode
 import com.brandjunhoe.productservice.review.domain.enums.ReviewTypeEnum
@@ -14,17 +15,17 @@ import javax.persistence.*
 @Where(clause = "deldate IS NOT NULL")
 class Review(
 
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    val id: UUID = UUID.randomUUID(),
+    @Column(name = "usr_id", nullable = false)
+    val usrId: UUID,
 
-    @Embedded
-    val productCode: ProductCode,
+    @Column(name = "order_product_code", nullable = false)
+    val orderProductCode: String,
 
-    @Embedded
-    val itemCode: ItemCode,
+    @Column(name = "product_code", nullable = false)
+    val productCode: String,
+
+    @Column(name = "item_code", nullable = false)
+    val itemCode: String,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", columnDefinition = "enum", nullable = false)
@@ -37,13 +38,22 @@ class Review(
     val contents: String,
 
     @Column(name = "mileage")
-    val mileage: Int = 0,
+    val mileage: Int,
+
+    @Version
+    val version: Int = 0,
 
     @ElementCollection
     @CollectionTable(name = "review_image", joinColumns = [JoinColumn(name = "review_id")])
-    val images: List<ReviewImage> = listOf()
+    val images: List<ReviewImage>? = null,
 
-) : DateColumnEntity() {
+    @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    val id: UUID = UUID.randomUUID()
+
+) : DateDeleteColumnEntity() {
 
 
 }

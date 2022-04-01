@@ -20,11 +20,6 @@ class ProductController(
 ) {
 
 
-    @GetMapping
-    fun get(): String =
-        "/"
-
-
     @GetMapping("/{productCode}")
     fun detail(
         @PathVariable(value = "productCode") @Valid @NotBlank productCode: String

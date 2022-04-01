@@ -61,7 +61,7 @@ class GlobalExceptionHandler {
         ]
     )
     @Throws(Exception::class)
-    fun commonExcetpion(e: Exception, request: HttpServletRequest, webRequest: WebRequest): CommonResponse<Any> {
+    fun commonExcetpion(e: Exception, request: HttpServletRequest, webRequest: WebRequest): CommonResponse<Unit> {
 
         val errorCode = when (e::class.java.simpleName) {
             // 데이터 찾지 못하는 경우

@@ -1,10 +1,12 @@
 package com.brandjunhoe.productservice.common.page
 
-data class TotalPageDTO(private val number: Int = 0,
-                   private val totalPages: Int = 0,
-                   private val totalElements: Long = 0) {
+data class TotalPageDTO(
+    private val number: Int,
+    private val totalPages: Int,
+    private val totalElements: Long
+) {
 
     fun getNumber(): Int =
-            number + 1
+        number + 1
 
 }
