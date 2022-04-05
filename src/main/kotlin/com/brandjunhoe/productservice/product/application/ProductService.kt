@@ -1,6 +1,7 @@
 package com.brandjunhoe.productservice.product.application
 
 import com.brandjunhoe.productservice.category.domain.CategoryCode
+import com.brandjunhoe.productservice.common.exception.BadRequestException
 import com.brandjunhoe.productservice.common.exception.DataNotFoundException
 import com.brandjunhoe.productservice.product.application.dto.ItemOptionValueDTO
 import com.brandjunhoe.productservice.product.application.dto.ItemOptionsDTO
@@ -11,6 +12,9 @@ import com.brandjunhoe.productservice.product.domain.ProductCode
 import com.brandjunhoe.productservice.product.domain.ProductCustomRepository
 import com.brandjunhoe.productservice.product.domain.ProductRepository
 import com.brandjunhoe.productservice.product.presentation.dto.ResProductDetailDTO
+import com.brandjunhoe.productservice.review.domain.event.ProductReviewUpdateEvent
+import org.springframework.context.event.EventListener
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 /**
@@ -18,9 +22,9 @@ import org.springframework.stereotype.Service
  */
 @Service
 class ProductService(
-    val productRepository: ProductRepository,
-    val productCustomRepository: ProductCustomRepository,
-    val itemRepository: ItemRepository
+    private val productRepository: ProductRepository,
+    private val productCustomRepository: ProductCustomRepository,
+    private val itemRepository: ItemRepository
 ) {
 
     //findTop10ByOrderByRentCntDesc
@@ -63,5 +67,14 @@ class ProductService(
    */
     }
 
+    @EventListener
+    @Async
+    fun updateReviewSummary(event: ProductReviewUpdateEvent) {
+        val product = productRepository.findByProductCode(event.productCode)
+            ?: throw BadRequestException("product not found")
+
+        product.updateReviewSummary(event.reviewCount, event.reviewRating)
+
+    }
 
 }

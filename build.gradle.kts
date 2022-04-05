@@ -71,6 +71,9 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+    implementation( "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
 
 
     implementation("mysql:mysql-connector-java")

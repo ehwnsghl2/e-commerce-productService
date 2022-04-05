@@ -16,17 +16,17 @@ class Product(
     @EmbeddedId
     val productCode: ProductCode,
 
-   /* @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-        name = "product_category",
-        joinColumns = [JoinColumn(name = "product_code", nullable = false)],
-    )
-    @JoinTable(
-        name = "product_category",
-        joinColumns = [JoinColumn(name = "product_code", nullable = false)],
-        inverseJoinColumns = [JoinColumn(name = "category_code", nullable = false)
-    )
-    val categoryCodes: Set<CategoryCode>,*/
+    /* @ElementCollection(fetch = FetchType.EAGER)
+     @CollectionTable(
+         name = "product_category",
+         joinColumns = [JoinColumn(name = "product_code", nullable = false)],
+     )
+     @JoinTable(
+         name = "product_category",
+         joinColumns = [JoinColumn(name = "product_code", nullable = false)],
+         inverseJoinColumns = [JoinColumn(name = "category_code", nullable = false)
+     )
+     val categoryCodes: Set<CategoryCode>,*/
 
 
     @Column(name = "name", length = 100)
@@ -76,10 +76,10 @@ class Product(
     val gradeSaleState: Boolean = true,
 
     @Column(name = "review_count", nullable = false)
-    val reviewCount: Int? = null,
+    var reviewCount: Int? = null,
 
     @Column(name = "review_rating", nullable = false)
-    val reviewRating: Float? = null,
+    var reviewRating: Float? = null,
 
     @Column(name = "total_sale_count")
     val totalSaleCount: Int? = null,
@@ -102,6 +102,10 @@ class Product(
 
 ) : DateColumnEntity() {
 
+    fun updateReviewSummary(reviewCount: Int, reviewRating: Float) {
+        this.reviewCount = reviewCount
+        this.reviewRating = reviewRating
+    }
 
 }
 

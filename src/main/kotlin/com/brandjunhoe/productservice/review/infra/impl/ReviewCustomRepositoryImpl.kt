@@ -4,6 +4,7 @@ import com.brandjunhoe.productservice.review.application.dto.ReviewTotalDTO
 import com.brandjunhoe.productservice.review.domain.QReview.review
 import com.brandjunhoe.productservice.review.domain.ReviewCustomRepository
 import com.querydsl.core.types.Projections
+import com.querydsl.core.types.dsl.MathExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.stereotype.Repository
 
@@ -14,16 +15,16 @@ import org.springframework.stereotype.Repository
 class ReviewCustomRepositoryImpl(private val queryFactory: JPAQueryFactory) : ReviewCustomRepository {
 
 
-    override fun findByTotalReviewScoreAvgAndCount(productCode: String) {
-        queryFactory.select(
+    override fun findByReviewSummary(productCode: String): ReviewTotalDTO {
+        return queryFactory.select(
             Projections.constructor(
                 ReviewTotalDTO::class.java,
-                review.score.avg(),
+                MathExpressions.round(review.score.avg(), 1),
                 review.count().intValue()
             )
         ).from(review)
-            .where()
-
+            .where(review.productCode.eq(productCode))
+            .fetchFirst()
     }
 
 
