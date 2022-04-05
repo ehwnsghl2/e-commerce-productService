@@ -7,6 +7,9 @@ import com.brandjunhoe.productservice.review.application.ReviewService
 import com.brandjunhoe.productservice.review.application.dto.ReviewDTO
 import com.brandjunhoe.productservice.review.presentation.dto.ReqReviewSaveDTO
 import org.springframework.web.bind.annotation.*
+import java.util.*
+import javax.validation.Valid
+import javax.validation.constraints.NotBlank
 
 /**
  * Create by DJH on 2022/03/28.
@@ -26,6 +29,11 @@ class ReviewController(val reviewService: ReviewService) {
         request.validate()
         reviewService.save(request)
         return CommonResponse()
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteReview(@PathVariable @Valid @NotBlank id: UUID) {
+        reviewService.delete(id)
     }
 
 }

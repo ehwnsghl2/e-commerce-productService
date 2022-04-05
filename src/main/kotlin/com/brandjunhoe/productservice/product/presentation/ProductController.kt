@@ -22,7 +22,7 @@ class ProductController(
 
     @GetMapping("/{productCode}")
     fun detail(
-        @PathVariable(value = "productCode") @Valid @NotBlank productCode: String
+        @PathVariable @Valid @NotBlank productCode: String
     ): CommonResponse<ResProductDetailDTO> = CommonResponse(productService.detail(productCode))
 
 

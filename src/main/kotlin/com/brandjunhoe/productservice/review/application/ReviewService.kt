@@ -3,11 +3,13 @@ package com.brandjunhoe.productservice.review.application
 import com.brandjunhoe.productservice.client.OrderImplClient
 import com.brandjunhoe.productservice.common.calculator.rate
 import com.brandjunhoe.productservice.common.exception.BadRequestException
+import com.brandjunhoe.productservice.common.exception.DataNotFoundException
 import com.brandjunhoe.productservice.common.page.ResPageDTO
 import com.brandjunhoe.productservice.common.page.TotalPageDTO
 import com.brandjunhoe.productservice.config.ReviewSaveProperties
 import com.brandjunhoe.productservice.product.domain.ProductCode
 import com.brandjunhoe.productservice.review.application.dto.ReviewDTO
+import com.brandjunhoe.productservice.review.domain.Review
 import com.brandjunhoe.productservice.review.domain.ReviewCustomRepository
 import com.brandjunhoe.productservice.review.domain.ReviewRepository
 import com.brandjunhoe.productservice.review.domain.enums.ReviewTypeEnum
@@ -18,6 +20,8 @@ import kotlinx.coroutines.launch
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 /**
  * Create by DJH on 2022/03/21.
@@ -66,6 +70,12 @@ class ReviewService(
 
     }
 
+    @Transactional
+    fun delete(id: UUID) {
+        val review = findById(id)
+        review.delete()
+    }
+
 
     private fun productReviewUpdate(productCode: String) {
         val reviews = reviewCustomRepository.findByReviewSummary(productCode)
@@ -77,6 +87,10 @@ class ReviewService(
             )
         )
     }
+
+
+    private fun findById(id: UUID): Review = reviewRepository.findById(id)
+        ?: throw DataNotFoundException("review not found")
 
 
 }
