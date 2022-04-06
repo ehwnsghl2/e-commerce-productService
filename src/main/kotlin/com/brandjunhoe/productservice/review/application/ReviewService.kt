@@ -4,7 +4,7 @@ import com.brandjunhoe.productservice.client.OrderImplClient
 import com.brandjunhoe.productservice.common.calculator.rate
 import com.brandjunhoe.productservice.common.exception.BadRequestException
 import com.brandjunhoe.productservice.common.exception.DataNotFoundException
-import com.brandjunhoe.productservice.common.page.ResPageDTO
+import com.brandjunhoe.productservice.common.page.PageDTO
 import com.brandjunhoe.productservice.common.page.TotalPageDTO
 import com.brandjunhoe.productservice.config.ReviewSaveProperties
 import com.brandjunhoe.productservice.product.domain.ProductCode
@@ -36,10 +36,10 @@ class ReviewService(
 ) {
 
 
-    fun findAll(pageRequest: PageRequest): ResPageDTO<List<ReviewDTO>> {
+    fun findAll(pageRequest: PageRequest): PageDTO<List<ReviewDTO>> {
         val reviews = reviewRepository.findAll(pageRequest)
 
-        return ResPageDTO(
+        return PageDTO(
             TotalPageDTO(reviews.number, reviews.totalPages, reviews.totalElements),
             reviews.content.map { ReviewDTO(it.type, it.score, it.contents, it.images) }
         )
@@ -89,7 +89,7 @@ class ReviewService(
     }
 
 
-    private fun findById(id: UUID): Review = reviewRepository.findById(id)
+    private fun findById(id: UUID): Review = reviewRepository.findByIdOrNull(id)
         ?: throw DataNotFoundException("review not found")
 
 
