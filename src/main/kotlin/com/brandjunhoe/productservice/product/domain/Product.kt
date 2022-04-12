@@ -1,6 +1,5 @@
 package com.brandjunhoe.productservice.product.domain
 
-import com.brandjunhoe.productservice.category.domain.CategoryCode
 import com.brandjunhoe.productservice.common.domain.DateColumnEntity
 import com.brandjunhoe.productservice.product.domain.enums.ProductGradeLimitEnum
 import com.brandjunhoe.productservice.product.domain.enums.ProductTypeEnum

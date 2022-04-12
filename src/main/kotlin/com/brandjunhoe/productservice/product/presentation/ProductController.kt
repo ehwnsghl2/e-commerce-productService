@@ -1,10 +1,14 @@
 package com.brandjunhoe.productservice.product.presentation
 
 import com.brandjunhoe.productservice.category.application.CategoryService
+import com.brandjunhoe.productservice.common.page.PageDTO
+import com.brandjunhoe.productservice.common.page.ReqPageDTO
 import com.brandjunhoe.productservice.common.response.CommonResponse
 import com.brandjunhoe.productservice.product.application.ProductService
 import com.brandjunhoe.productservice.product.application.dto.ProductSearchDTO
+import com.brandjunhoe.productservice.product.domain.Product
 import com.brandjunhoe.productservice.product.presentation.dto.ResProductDetailDTO
+import org.springframework.data.domain.Page
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
@@ -21,18 +25,26 @@ class ProductController(
 
 
     @GetMapping("/{productCode}")
-    fun detail(
+    fun findByProductDetail(
         @PathVariable @Valid @NotBlank productCode: String
     ): CommonResponse<ResProductDetailDTO> = CommonResponse(productService.detail(productCode))
 
 
     @GetMapping("/category")
-    fun findCategoryProducts(@RequestParam(value = "categoryCode") @Valid @NotBlank categoryCode: String)
-    : CommonResponse<List<ProductSearchDTO>> {
+    fun findByCategoryProducts(@RequestParam(value = "categoryCode") @Valid @NotBlank categoryCode: String)
+        : CommonResponse<List<ProductSearchDTO>> {
 
         val categorys = categoryService.findRefCategorys(categoryCode).map { it.categoryCode.categoryCode }
 
         return CommonResponse(productService.findCategoryProducts(categorys))
     }
+
+    @GetMapping("/search")
+    fun findByProductSearch(
+        reqPageDTO: ReqPageDTO,
+        @RequestParam(value = "name") @Valid @NotBlank name: String
+    ): CommonResponse<PageDTO<List<ProductSearchDTO>>> =
+        CommonResponse(productService.findAllByName(name, reqPageDTO.getPageable()))
+
 
 }

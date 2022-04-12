@@ -13,3 +13,9 @@ Content-Type: application/json
 }
 
 ###
+
+GET http://localhost:9002/product/search?name=상품명
+Content-Type: application/json
+
+
+###

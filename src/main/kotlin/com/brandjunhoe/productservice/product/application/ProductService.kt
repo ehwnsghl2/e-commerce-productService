@@ -1,8 +1,9 @@
 package com.brandjunhoe.productservice.product.application
 
-import com.brandjunhoe.productservice.category.domain.CategoryCode
 import com.brandjunhoe.productservice.common.exception.BadRequestException
 import com.brandjunhoe.productservice.common.exception.DataNotFoundException
+import com.brandjunhoe.productservice.common.page.PageDTO
+import com.brandjunhoe.productservice.common.page.TotalPageDTO
 import com.brandjunhoe.productservice.product.application.dto.ItemOptionValueDTO
 import com.brandjunhoe.productservice.product.application.dto.ItemOptionsDTO
 import com.brandjunhoe.productservice.product.application.dto.ProductDTO
@@ -14,6 +15,7 @@ import com.brandjunhoe.productservice.product.domain.ProductRepository
 import com.brandjunhoe.productservice.product.presentation.dto.ResProductDetailDTO
 import com.brandjunhoe.productservice.review.domain.event.ProductReviewUpdateEvent
 import org.springframework.context.event.EventListener
+import org.springframework.data.domain.PageRequest
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
@@ -65,6 +67,14 @@ class ProductService(
                    println(it.productCode.productCode)
                    ProductSearchDTO(it) }
    */
+    }
+
+    fun findAllByName(name: String, pageRequest: PageRequest): PageDTO<List<ProductSearchDTO>> {
+        val products = productRepository.findAllByNameContaining(pageRequest, name)
+        return PageDTO(
+            TotalPageDTO(products.number, products.totalPages, products.totalElements),
+            products.content.map { ProductSearchDTO(it) }
+        )
     }
 
     @EventListener

@@ -49,7 +49,7 @@ class QnaService(private val qnaRepository: QnaRepository) {
         review.delete()
     }
 
-    private fun findById(id: UUID): Qna = qnaRepository.findByIdOrNull(id)
+    private fun findById(id: UUID): Qna = qnaRepository.findById(id)
         ?: throw DataNotFoundException("qna not found")
 
     private fun findByUsrIdAndProductCode(usrID: UUID, productCode: String): Qna =

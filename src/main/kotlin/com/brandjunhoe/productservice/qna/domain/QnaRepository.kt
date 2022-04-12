@@ -9,7 +9,7 @@ import java.util.*
  * Create by DJH on 2022/04/05.
  */
 interface QnaRepository {
-    fun findByIdOrNull(id: UUID): Qna?
+    fun findById(id: UUID): Qna?
     fun findAll(pageable: Pageable): Page<Qna>
     fun save(qna: Qna): Qna
     fun findByUsrIdAndProductCode(usrId: UUID, productCode: ProductCode): Qna?

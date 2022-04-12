@@ -11,5 +11,5 @@ interface ReviewRepository {
     fun findAll(pageable: Pageable): Page<Review>
     fun existsByOrderProductCode(orderProductCode: String): Boolean
     fun save(review: Review): Review
-    fun findByIdOrNull(id: UUID): Review?
+    fun findById(id: UUID): Review?
 }

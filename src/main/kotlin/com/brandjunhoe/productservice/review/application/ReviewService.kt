@@ -89,7 +89,7 @@ class ReviewService(
     }
 
 
-    private fun findById(id: UUID): Review = reviewRepository.findByIdOrNull(id)
+    private fun findById(id: UUID): Review = reviewRepository.findById(id)
         ?: throw DataNotFoundException("review not found")
 
 

@@ -1,3 +1,3 @@
 package com.brandjunhoe.productservice.common.page
 
-data class PageDTO<T>(private val total: TotalPageDTO, private val data: T)
+data class PageDTO<T>(val total: TotalPageDTO, val data: T)

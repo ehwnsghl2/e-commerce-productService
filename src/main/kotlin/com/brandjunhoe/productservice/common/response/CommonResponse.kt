@@ -10,7 +10,7 @@ data class CommonResponse<T>(
 
     constructor() : this(HttpStatus.OK.value(), HttpStatus.OK.reasonPhrase, null)
 
-    constructor(content: T) : this(HttpStatus.OK.value(), HttpStatus.OK.reasonPhrase, content)
+    constructor(data: T) : this(HttpStatus.OK.value(), HttpStatus.OK.reasonPhrase, data)
 
     constructor(httpStatus: HttpStatus, message: String? = null) : this(httpStatus.value(), message
             ?: httpStatus.reasonPhrase, null)

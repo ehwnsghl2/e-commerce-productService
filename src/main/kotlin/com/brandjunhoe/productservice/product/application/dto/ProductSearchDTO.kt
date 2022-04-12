@@ -5,11 +5,11 @@ import com.brandjunhoe.productservice.product.domain.Product
 /**
  * Create by DJH on 2022/03/25.
  */
-class ProductSearchDTO(
+data class ProductSearchDTO(
 
     val productCode: String,
 
-    val image: String? = null,
+    val imagePath: String? = null,
 
     val name: String,
 
