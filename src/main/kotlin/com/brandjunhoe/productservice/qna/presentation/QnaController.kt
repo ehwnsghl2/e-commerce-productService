@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank
  * Create by DJH on 2022/04/05.
  */
 @RestController
-@RequestMapping("/qna")
+@RequestMapping("/v1/qna")
 class QnaController(val qnaService: QnaService) {
 
 

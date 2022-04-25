@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
  * Create by DJH on 2022/03/22.
  */
 @RestController
-@RequestMapping("/main")
+@RequestMapping("/v1/main")
 class MainController(
     val productService: ProductService,
     val categoryService: CategoryService

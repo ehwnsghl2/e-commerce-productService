@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank
  * Create by DJH on 2022/03/28.
  */
 @RestController
-@RequestMapping("/review")
+@RequestMapping("/v1/review")
 class ReviewController(val reviewService: ReviewService) {
 
 

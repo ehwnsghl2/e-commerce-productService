@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty
  * Create by DJH on 2022/04/06.
  */
 @RestController
-@RequestMapping("/product-internal")
+@RequestMapping("/v1/product-internal")
 class ProductInternalController(val productInternalService: ProductInternalService) {
 
 

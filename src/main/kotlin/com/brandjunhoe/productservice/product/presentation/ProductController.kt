@@ -17,7 +17,7 @@ import javax.validation.constraints.NotBlank
  * Create by DJH on 2022/03/21.
  */
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/v1/product")
 class ProductController(
     val productService: ProductService,
     val categoryService: CategoryService
