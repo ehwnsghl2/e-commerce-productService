@@ -6,9 +6,7 @@ import com.brandjunhoe.productservice.common.page.ReqPageDTO
 import com.brandjunhoe.productservice.common.response.CommonResponse
 import com.brandjunhoe.productservice.product.application.ProductService
 import com.brandjunhoe.productservice.product.application.dto.ProductSearchDTO
-import com.brandjunhoe.productservice.product.domain.Product
 import com.brandjunhoe.productservice.product.presentation.dto.ResProductDetailDTO
-import org.springframework.data.domain.Page
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank

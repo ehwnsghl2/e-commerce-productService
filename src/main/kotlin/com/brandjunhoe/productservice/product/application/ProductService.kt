@@ -1,8 +1,5 @@
 package com.brandjunhoe.productservice.product.application
 
-import com.brandjunhoe.productservice.category.domain.CategoryCode
-import com.brandjunhoe.productservice.common.exception.BadRequestException
-import com.brandjunhoe.productservice.common.exception.DataNotFoundException
 import com.brandjunhoe.productservice.common.page.PageDTO
 import com.brandjunhoe.productservice.common.page.TotalPageDTO
 import com.brandjunhoe.productservice.consumer.dto.ProductItemQuantityMinusUpdateDTO
@@ -46,13 +43,32 @@ class ProductService(
 
         val items = product.items
 
-        val itemGroup = items.groupBy { it.name }
+        /*val itemGroup = items.groupBy { it.value }
 
         val options = itemGroup.map { (name, value) ->
             ItemOptionsDTO(
                 name,
                 value.map { ItemOptionValueDTO(it.value, it.quantity, it.addPrice, it.sellingState) })
+        }*/
+
+        items.forEach {
+            println(it)
         }
+
+
+        val itemGroups = items.groupBy { it.name }
+
+
+        val options = itemGroups.map { itemGroup ->
+            val values = itemGroup.value.map { item ->
+                val value = item.value.map { it.values }.joinToString(" ")
+                ItemOptionValueDTO(value, item.quantity, item.addPrice, item.sellingState)
+            }
+            ItemOptionsDTO(itemGroup.key, values)
+        }
+
+
+
 
         return ResProductDetailDTO(product.name, product.mainImage.path ?: "", product.type.name, options)
 

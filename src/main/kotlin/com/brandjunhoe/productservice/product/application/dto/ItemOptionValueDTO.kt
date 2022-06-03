@@ -5,7 +5,7 @@ package com.brandjunhoe.productservice.product.application.dto
  */
 class ItemOptionValueDTO(
     val value: String,
-    val uantity: Int,
+    val quantity: Int,
     val addPrice: Int,
     val sellingState: Boolean
 ) {

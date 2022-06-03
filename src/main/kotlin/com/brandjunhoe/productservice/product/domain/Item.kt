@@ -1,6 +1,7 @@
 package com.brandjunhoe.productservice.product.domain
 
 import com.brandjunhoe.productservice.common.domain.DateColumnEntity
+import com.brandjunhoe.productservice.product.domain.converter.ItemConverter
 import com.brandjunhoe.productservice.product.domain.enums.StockQuantityCheckEnum
 import org.hibernate.annotations.Where
 import javax.persistence.*
@@ -20,8 +21,9 @@ class Item(
     @Column(name = "name", length = 255, nullable = false)
     val name: String,
 
-    @Column(name = "value", length = 255, nullable = false)
-    val value: String,
+    @Column(name = "value", columnDefinition = "json",/* length = 255,*/ nullable = false)
+    @Convert(converter = ItemConverter::class)
+    val value: List<Map<Any,String>>,
 
     @Column(name = "quantity", nullable = false)
     val quantity: Int,
