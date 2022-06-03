@@ -1,0 +1,30 @@
+GET http://localhost:9002/api/v1/product/review?page=1&size=20
+Content-Type: application/json
+
+###
+
+GET http://localhost:9002/api/v1/product/review/4617f0ca-8bc5-4601-9a6f-0595e2826dc8
+Content-Type: application/json
+
+
+###
+
+POST http://localhost:9002/api/v1/product/review
+Content-Type: application/json
+
+{
+  "usrId" : "6efb1bf8-d3d3-472a-876e-223a2798eb56",
+  "orderProductCode" : "a",
+  "productCode" : "codeby",
+  "itemCode" : "itemcode1",
+  "type" : "TEXT",
+  "score": 5,
+  "contents" : "test review"
+}
+
+###
+
+DELETE http://localhost:9002/api/v1/product/review/d97e48e5-5fef-4a9e-a881-253116820b82
+Content-Type: application/json
+
+###

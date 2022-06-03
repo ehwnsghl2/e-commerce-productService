@@ -47,6 +47,13 @@ class Item(
 
 ) : DateColumnEntity() {
 
+    fun changeQuantityMinus(quantity: Int) {
+        this.quantity.minus(quantity)
+    }
+
+    fun changeQuantityPlus(quantity: Int) {
+        this.quantity.plus(quantity)
+    }
 
 }
 

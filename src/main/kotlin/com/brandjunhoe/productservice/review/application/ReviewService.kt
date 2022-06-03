@@ -2,13 +2,13 @@ package com.brandjunhoe.productservice.review.application
 
 import com.brandjunhoe.productservice.client.OrderImplClient
 import com.brandjunhoe.productservice.common.calculator.rate
-import com.brandjunhoe.productservice.common.exception.BadRequestException
-import com.brandjunhoe.productservice.common.exception.DataNotFoundException
 import com.brandjunhoe.productservice.common.page.PageDTO
 import com.brandjunhoe.productservice.common.page.TotalPageDTO
 import com.brandjunhoe.productservice.config.ReviewSaveProperties
 import com.brandjunhoe.productservice.product.domain.ProductCode
 import com.brandjunhoe.productservice.review.application.dto.ReviewDTO
+import com.brandjunhoe.productservice.review.application.exception.ReviewAlreadyException
+import com.brandjunhoe.productservice.review.application.exception.ReviewNotFoundException
 import com.brandjunhoe.productservice.review.domain.Review
 import com.brandjunhoe.productservice.review.domain.ReviewCustomRepository
 import com.brandjunhoe.productservice.review.domain.ReviewRepository
@@ -41,32 +41,34 @@ class ReviewService(
 
         return PageDTO(
             TotalPageDTO(reviews.number, reviews.totalPages, reviews.totalElements),
-            reviews.content.map { ReviewDTO(it.type, it.score, it.contents, it.images) }
+            reviews.content.map { ReviewDTO(it) }
         )
+    }
+
+    fun findByOne(id: UUID): ReviewDTO {
+        val review = findById(id)
+        return ReviewDTO(review.type, review.score, review.contents)
     }
 
     fun save(request: ReqReviewSaveDTO) {
 
         if (reviewRepository.existsByOrderProductCode(request.orderProductCode))
-            throw BadRequestException("already writed review")
+            throw ReviewAlreadyException()
 
-        // 포토리뷰인 경우 이미지 업로드
         if (request.type == ReviewTypeEnum.PHOTO) {
 
         }
 
-        // 마일리지 정책 조회 하여 적립금 부여
-        val rate = reviewSaveProperties.rate(request.type)
+        val mileageSaveRate = reviewSaveProperties.rate(request.type)
 
         val orderProduct = orderClient.findByOrderProduct(request.orderProductCode)
 
-        val saveMileage = rate(orderProduct.amount, rate)
+        val saveMileage = rate(orderProduct.amount, mileageSaveRate)
 
-
-        request.toEntity(saveMileage)
+        reviewRepository.save(request.toEntity(saveMileage))
 
         // 상품 리뷰 갱신
-        GlobalScope.launch { productReviewUpdate(request.productCode) }
+        GlobalScope.launch { updateProductReviewSummary(request.productCode) }
 
     }
 
@@ -77,8 +79,9 @@ class ReviewService(
     }
 
 
-    private fun productReviewUpdate(productCode: String) {
+    private fun updateProductReviewSummary(productCode: String) {
         val reviews = reviewCustomRepository.findByReviewSummary(productCode)
+
         applicationEventPublisher.publishEvent(
             ProductReviewUpdateEvent(
                 ProductCode(productCode),
@@ -90,7 +93,7 @@ class ReviewService(
 
 
     private fun findById(id: UUID): Review = reviewRepository.findById(id)
-        ?: throw DataNotFoundException("review not found")
+        ?: throw ReviewNotFoundException()
 
 
 }

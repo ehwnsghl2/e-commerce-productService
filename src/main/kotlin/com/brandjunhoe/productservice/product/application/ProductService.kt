@@ -1,13 +1,16 @@
 package com.brandjunhoe.productservice.product.application
 
+import com.brandjunhoe.productservice.category.domain.CategoryCode
 import com.brandjunhoe.productservice.common.exception.BadRequestException
 import com.brandjunhoe.productservice.common.exception.DataNotFoundException
 import com.brandjunhoe.productservice.common.page.PageDTO
 import com.brandjunhoe.productservice.common.page.TotalPageDTO
+import com.brandjunhoe.productservice.consumer.dto.ProductItemQuantityMinusUpdateDTO
 import com.brandjunhoe.productservice.product.application.dto.ItemOptionValueDTO
 import com.brandjunhoe.productservice.product.application.dto.ItemOptionsDTO
 import com.brandjunhoe.productservice.product.application.dto.ProductDTO
 import com.brandjunhoe.productservice.product.application.dto.ProductSearchDTO
+import com.brandjunhoe.productservice.product.application.exception.ProductNotFoundException
 import com.brandjunhoe.productservice.product.domain.ItemRepository
 import com.brandjunhoe.productservice.product.domain.ProductCode
 import com.brandjunhoe.productservice.product.domain.ProductCustomRepository
@@ -18,6 +21,7 @@ import org.springframework.context.event.EventListener
 import org.springframework.data.domain.PageRequest
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * Create by DJH on 2022/03/21.
@@ -34,16 +38,11 @@ class ProductService(
         return productRepository.findTop8ByDisplayStateIsTrueOrderByTotalSaleCountDesc().map {
             ProductDTO(it.productCode.productCode, it.name, it.sellingPrice, it.sellingState, it.mainImage.path)
         }
-
     }
 
     fun detail(productCode: String): ResProductDetailDTO {
-        println("productCode : $productCode")
-        val product =
-            productRepository.findByProductCode(
-                ProductCode(productCode)
-            ) ?: throw DataNotFoundException("product data not found")
 
+        val product = findByProductCode(productCode)
 
         val items = product.items
 
@@ -55,18 +54,18 @@ class ProductService(
                 value.map { ItemOptionValueDTO(it.value, it.quantity, it.addPrice, it.sellingState) })
         }
 
-        return ResProductDetailDTO(product.name, product.mainImage.path ?: "", options)
+        return ResProductDetailDTO(product.name, product.mainImage.path ?: "", product.type.name, options)
 
     }
 
     fun findCategoryProducts(categoryCodes: List<String>): List<ProductSearchDTO> {
         return productCustomRepository.findByCategoryCodesIn(categoryCodes)
 
-        /*   productRepository.findByCategoryCodesCategoryCodeIn(categoryCodes)
-               .map {
-                   println(it.productCode.productCode)
-                   ProductSearchDTO(it) }
-   */
+        /*return productRepository.findByCategoryCodesIn(categoryCodes.toSet())
+            .map {
+                println(it.productCode.productCode)
+                ProductSearchDTO(it)
+            }*/
     }
 
     fun findAllByName(name: String, pageRequest: PageRequest): PageDTO<List<ProductSearchDTO>> {
@@ -77,14 +76,24 @@ class ProductService(
         )
     }
 
+    fun updateProductItemStockMinus(request: ProductItemQuantityMinusUpdateDTO) {
+        val product = findByProductCode(request.productCode)
+        product.updateItemQuantityMinus(request.itemCode, request.quantity)
+    }
+
     @EventListener
     @Async
+    @Transactional
     fun updateReviewSummary(event: ProductReviewUpdateEvent) {
         val product = productRepository.findByProductCode(event.productCode)
-            ?: throw BadRequestException("product not found")
+            ?: throw ProductNotFoundException()
 
         product.updateReviewSummary(event.reviewCount, event.reviewRating)
 
     }
+
+    private fun findByProductCode(productCode: String) =
+        productRepository.findByProductCode(ProductCode(productCode))
+            ?: throw ProductNotFoundException()
 
 }

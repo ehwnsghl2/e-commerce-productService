@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository
 @Repository
 class ReviewCustomRepositoryImpl(private val queryFactory: JPAQueryFactory) : ReviewCustomRepository {
 
-
     override fun findByReviewSummary(productCode: String): ReviewTotalDTO {
         return queryFactory.select(
             Projections.constructor(

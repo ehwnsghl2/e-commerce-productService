@@ -10,7 +10,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "qna")
-@Where(clause = "deldate IS NOT NULL")
+@Where(clause = "deldate IS NULL")
 class Qna(
 
     @Column(name = "usr_id", nullable = false)
@@ -19,18 +19,13 @@ class Qna(
     @Embedded
     val productCode: ProductCode,
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type", columnDefinition = "enum", nullable = false)
-    var type: QnaTypeEnum,
+    type: QnaTypeEnum,
 
-    @Column(name = "secret_state", nullable = false)
-    var secretState: Boolean,
+    secretState: Boolean,
 
-    @Column(name = "title", length = 100, nullable = false)
-    var title: String,
+    title: String,
 
-    @Column(name = "question", length = 255, nullable = false)
-    var question: String,
+    question: String,
 
     @Column(name = "answer", length = 255)
     val answer: String? = null,
@@ -43,6 +38,22 @@ class Qna(
 
 ) : DateDeleteColumnEntity() {
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", columnDefinition = "enum", nullable = false)
+    var type: QnaTypeEnum = type
+        protected set
+
+    @Column(name = "secret_state", nullable = false)
+    var secretState: Boolean = secretState
+        protected set
+
+    @Column(name = "title", length = 100, nullable = false)
+    var title: String = title
+        protected set
+
+    @Column(name = "question", length = 255, nullable = false)
+    var question: String = question
+        protected set
 
     fun update(type: QnaTypeEnum?, secretState: Boolean?, title: String?, question: String?) {
         type?.let { this.type = it }

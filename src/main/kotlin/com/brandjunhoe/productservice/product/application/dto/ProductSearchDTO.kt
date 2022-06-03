@@ -25,7 +25,7 @@ data class ProductSearchDTO(
 
     val reviewCount: Int? = null,
 
-    val reviewRating: Float? = null
+    val reviewRating: Double? = null
 
     // 예상 적립금 추가 필요
 

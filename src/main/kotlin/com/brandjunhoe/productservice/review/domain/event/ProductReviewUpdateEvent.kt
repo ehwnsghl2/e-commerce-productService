@@ -8,5 +8,5 @@ import com.brandjunhoe.productservice.product.domain.ProductCode
 class ProductReviewUpdateEvent(
     val productCode: ProductCode,
     val reviewCount: Int,
-    val reviewRating: Float
+    val reviewRating: Double
 )

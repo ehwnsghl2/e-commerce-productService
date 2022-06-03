@@ -1,6 +1,8 @@
 package com.brandjunhoe.productservice.product.domain
 
+import com.brandjunhoe.productservice.category.domain.CategoryCode
 import com.brandjunhoe.productservice.common.domain.DateColumnEntity
+import com.brandjunhoe.productservice.product.domain.converter.ProductTypeConverter
 import com.brandjunhoe.productservice.product.domain.enums.ProductGradeLimitEnum
 import com.brandjunhoe.productservice.product.domain.enums.ProductTypeEnum
 import org.hibernate.annotations.ColumnDefault
@@ -9,23 +11,23 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "product")
-//@Where(clause = "deldate IS NOT NULL")
+//@Where(clause = "deldate IS NULL")
 class Product(
 
     @EmbeddedId
     val productCode: ProductCode,
 
-    /* @ElementCollection(fetch = FetchType.EAGER)
-     @CollectionTable(
-         name = "product_category",
-         joinColumns = [JoinColumn(name = "product_code", nullable = false)],
-     )
-     @JoinTable(
-         name = "product_category",
-         joinColumns = [JoinColumn(name = "product_code", nullable = false)],
-         inverseJoinColumns = [JoinColumn(name = "category_code", nullable = false)
-     )
-     val categoryCodes: Set<CategoryCode>,*/
+    @ElementCollection(fetch = FetchType.EAGER)
+    /*@CollectionTable(
+        name = "product_category",
+        joinColumns = [JoinColumn(name = "product_code", nullable = false)],
+    )*/
+    @JoinTable(
+        name = "product_category",
+        joinColumns = [JoinColumn(name = "product_code", nullable = false)],
+        //inverseJoinColumns = [JoinColumn(name = "category_code", nullable = false)]
+    )
+    val categoryCodes: Set<CategoryCode>,
 
 
     @Column(name = "name", length = 100)
@@ -35,6 +37,9 @@ class Product(
     @Column(name = "type", columnDefinition = "enum", nullable = false)
     @ColumnDefault("PRODUCT")
     val type: ProductTypeEnum = ProductTypeEnum.PRODUCT,
+    //@Convert(converter = ProductTypeConverter::class)
+    //val type: String,
+
 
     @Column(name = "summary", nullable = false)
     val summary: String,
@@ -74,15 +79,6 @@ class Product(
     @Column(name = "grade_sale_state", nullable = false)
     val gradeSaleState: Boolean = true,
 
-    @Column(name = "review_count", nullable = false)
-    var reviewCount: Int? = null,
-
-    @Column(name = "review_rating", nullable = false)
-    var reviewRating: Float? = null,
-
-    @Column(name = "total_sale_count")
-    val totalSaleCount: Int? = null,
-
     @Column(name = "memo")
     val memo: String? = null,
 
@@ -101,9 +97,32 @@ class Product(
 
 ) : DateColumnEntity() {
 
-    fun updateReviewSummary(reviewCount: Int, reviewRating: Float) {
+    @Column(name = "review_count", nullable = false)
+    var reviewCount: Int? = null
+        protected set
+
+    @Column(name = "review_rating", nullable = false)
+    var reviewRating: Double? = null
+        protected set
+
+    @Column(name = "total_sale_count")
+    var totalSaleCount: Int? = null
+        protected set
+
+
+    fun updateReviewSummary(reviewCount: Int, reviewRating: Double) {
         this.reviewCount = reviewCount
         this.reviewRating = reviewRating
+    }
+
+    fun updateItemQuantityMinus(itemCode: String, quantity: Int) {
+        items.find { it.itemCode == ItemCode(itemCode) }
+            ?.let { item -> item.changeQuantityMinus(quantity) }
+    }
+
+    fun updateItemQuantityPlus(itemCode: String, quantity: Int) {
+        items.find { it.itemCode == ItemCode(itemCode) }
+            ?.let { item -> item.changeQuantityMinus(quantity) }
     }
 
 }

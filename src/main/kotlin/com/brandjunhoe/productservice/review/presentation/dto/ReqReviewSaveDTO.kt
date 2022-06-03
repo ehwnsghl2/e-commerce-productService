@@ -3,6 +3,7 @@ package com.brandjunhoe.productservice.review.presentation.dto
 import com.brandjunhoe.productservice.common.exception.BadRequestException
 import com.brandjunhoe.productservice.product.domain.ItemCode
 import com.brandjunhoe.productservice.product.domain.ProductCode
+import com.brandjunhoe.productservice.review.application.exception.ReviewPhotoIntputValueException
 import com.brandjunhoe.productservice.review.domain.Review
 import com.brandjunhoe.productservice.review.domain.ReviewImage
 import com.brandjunhoe.productservice.review.domain.enums.ReviewTypeEnum
@@ -47,10 +48,10 @@ class ReqReviewSaveDTO(
 
     fun validate() {
         if (type == ReviewTypeEnum.PHOTO && images == null)
-            throw BadRequestException("review phto image not found")
+            throw ReviewPhotoIntputValueException()
     }
 
-    fun toEntity(mileage: Int) {
+    fun toEntity(mileage: Int): Review =
         Review(
             usrId,
             orderProductCode,
@@ -61,6 +62,5 @@ class ReqReviewSaveDTO(
             contents,
             mileage
         )
-    }
 
 }

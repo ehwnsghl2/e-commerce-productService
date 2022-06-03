@@ -52,10 +52,6 @@ class GlobalExceptionHandler {
             MethodArgumentTypeMismatchException::class,
             // 입출력 예외 처리
             IOException::class,
-            // 잘못된 요청
-            BadRequestException::class,
-            // 데이터 찾지 못할 경우
-            DataNotFoundException::class,
             // 에러
             Exception::class
         ]
@@ -64,8 +60,6 @@ class GlobalExceptionHandler {
     fun commonExcetpion(e: Exception, request: HttpServletRequest, webRequest: WebRequest): CommonResponse<Unit> {
 
         val errorCode = when (e::class.java.simpleName) {
-            // 데이터 찾지 못하는 경우
-            ErrorException.DataNotFoundException.name -> ErrorCode.DATA_NOT_FOUND
             // validate 에러
             ErrorException.BindException.name,
             ErrorException.MethodArgumentNotValidException.name,
@@ -73,9 +67,7 @@ class GlobalExceptionHandler {
             ErrorException.HttpRequestMethodNotSupportedException.name,
             ErrorException.IllegalArgumentException.name,
             ErrorException.FormValidationException.name,
-            // 잘못된 요청
-            ErrorException.BadRequestException.name -> ErrorCode.BAD_REQUEST
-            // 인증 실패
+             // 인증 실패
             ErrorException.AuthenticationException.name -> ErrorCode.UNAUTHORIZED
             // 권한 거부
             ErrorException.AccessDeniedException.name -> ErrorCode.FORBIDDEN
@@ -83,44 +75,18 @@ class GlobalExceptionHandler {
             else -> ErrorCode.INTERNAL_SERVER_ERROR
         }
 
-        println("error : $e")
-
-        return CommonResponse(errorCode.code, e.message.toString()/*errorCode.message*/)
+        return CommonResponse(errorCode.status, errorCode.code, errorCode.message)
 
     }
 
 
-    /* @ExceptionHandler(value = [
-         Exception::class
-     ])
-     @Throws(Exception::class)
-     fun allException(e: Exception, request: HttpServletRequest, webRequest: WebRequest): CommonResponse<Any> {
-         val ERROR_TITLE: String = e.message ?: "Empty Error Message"
-         val errorMap = ErrorUtils.setErrorMap(request, webRequest)
-         // Level 별 에러메시지 출력
-         ErrorUtils.errorWriter(CLASS_NAME, ErrorUtils.getResErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR.value()), ERROR_TITLE, errorMap, e)
-         return CommonResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.message
-             ?: HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase, errorMap)
-     }*/
+    @ExceptionHandler(value = [BadRequestException::class])
+    fun BadRequestExcetpion(e: BadRequestException): CommonResponse<Unit> =
+        CommonResponse(e.errorCode.status, e.errorCode.code, e.errorCode.message)
 
-    /**
-     * BindException Field 메세지 가공
-     * @param bindingResult
-     * @return
-     */
-    /*protected fun getBindResultFieldErrorMessage(bindingResult: BindingResult): String {
-        val resultMap: LinkedHashMap<String, Any> = LinkedHashMap()
-        resultMap["title"] = "Parameter Validation Error"
-        val fieldErrorList = bindingResult.fieldErrors
-        val paramList: MutableList<Map<String, Any?>> = ArrayList()
-        for (fieldError in fieldErrorList) {
-            val resultParam: LinkedHashMap<String, Any?> = linkedMapOf()
-            resultParam[fieldError.field] = fieldError.rejectedValue
-            resultParam["message"] = fieldError.defaultMessage
-            paramList.add(resultParam)
-        }
-        resultMap["fields"] = paramList
-        return JsonUtils.toMapperPrettyJson(resultMap)
-    }*/
+    @ExceptionHandler(value = [DataNotFoundException::class])
+    fun DataNotFoundExcetpion(e: DataNotFoundException): CommonResponse<Unit> =
+        CommonResponse(e.errorCode.status, e.errorCode.code, e.errorCode.message)
+
 
 }

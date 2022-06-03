@@ -1,5 +1,6 @@
 package com.brandjunhoe.productservice.product.domain
 
+import com.brandjunhoe.productservice.category.domain.CategoryCode
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
@@ -11,6 +12,6 @@ interface ProductRepository {
     fun findByProductCodeIn(productCode: List<ProductCode>): List<Product>
     fun findTop8ByDisplayStateIsTrueOrderByTotalSaleCountDesc(): List<Product>
     fun findAllByNameContaining(pageable: Pageable, name: String): Page<Product>
-    //fun findByCategoryCodesIn(categoryCodes: Set<CategoryCode>): List<Product>
+    fun findByCategoryCodesIn(categoryCodes: Set<CategoryCode>): List<Product>
     //fun findByCategoryCodesCategoryCodeIn(categoryCodes: List<String>): List<Product>
 }

@@ -1,6 +1,7 @@
 package com.brandjunhoe.productservice.qna.presentation.dto
 
 import com.brandjunhoe.productservice.qna.domain.enums.QnaTypeEnum
+import org.springframework.web.bind.annotation.PathVariable
 import java.util.*
 import javax.validation.constraints.NotBlank
 
@@ -9,9 +10,6 @@ import javax.validation.constraints.NotBlank
  */
 class ReqQnaUpdateDTO(
 
-    @NotBlank
-    val usrId: UUID,
-
     val type: QnaTypeEnum? = null,
 
     val secretState: Boolean? = null,
@@ -19,6 +17,5 @@ class ReqQnaUpdateDTO(
     val title: String? = null,
 
     val question: String? = null
-
 
 )

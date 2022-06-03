@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank
  * Create by DJH on 2022/04/05.
  */
 @RestController
-@RequestMapping("/v1/qna")
+@RequestMapping("/v1/product/qna")
 class QnaController(val qnaService: QnaService) {
 
 
@@ -25,23 +25,28 @@ class QnaController(val qnaService: QnaService) {
         CommonResponse(qnaService.findAll(pageRequest.getPageable()))
 
 
-    @PostMapping("/{productCode}")
-    fun saveQna(@PathVariable productCode: String, @RequestBody request: ReqQnaSaveDTO): CommonResponse<Unit> {
-        qnaService.save(productCode, request)
+    @PostMapping
+    fun saveQna(@RequestBody request: ReqQnaSaveDTO): CommonResponse<Unit> {
+        qnaService.save(request)
         return CommonResponse()
     }
 
 
-    @PatchMapping("/{productCode}")
-    fun updateQna(@PathVariable productCode: String, @RequestBody request: ReqQnaUpdateDTO): CommonResponse<Unit> {
-        qnaService.update(productCode, request)
+    @PatchMapping("/{id}")
+    fun updateQna(
+        @PathVariable @Valid @NotBlank id: UUID,
+        @RequestBody request: ReqQnaUpdateDTO
+    ): CommonResponse<Unit> {
+        qnaService.update(id, request)
         return CommonResponse()
     }
 
 
     @DeleteMapping("/{id}")
-    fun deleteQna(@PathVariable @Valid @NotBlank id: UUID) {
+    fun deleteQna(@PathVariable @Valid @NotBlank id: UUID)
+        : CommonResponse<Unit> {
         qnaService.delete(id)
+        return CommonResponse()
     }
 
 }

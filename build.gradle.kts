@@ -73,7 +73,6 @@ dependencies {
 
     implementation( "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
 
-
     implementation("mysql:mysql-connector-java")
     implementation("com.querydsl:querydsl-jpa") // querydsl
     implementation("com.vladmihalcea:hibernate-types-52:2.12.1")
@@ -86,6 +85,8 @@ dependencies {
             kotlin.srcDir("$buildDir/generated/source/kapt/main")
         }
     }
+
+    implementation("org.springframework.kafka:spring-kafka")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

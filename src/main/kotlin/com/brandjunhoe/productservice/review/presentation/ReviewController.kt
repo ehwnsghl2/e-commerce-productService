@@ -15,13 +15,17 @@ import javax.validation.constraints.NotBlank
  * Create by DJH on 2022/03/28.
  */
 @RestController
-@RequestMapping("/v1/review")
+@RequestMapping("/v1/product/review")
 class ReviewController(val reviewService: ReviewService) {
 
 
     @GetMapping
     fun findAllReviews(pageRequest: ReqPageDTO): CommonResponse<PageDTO<List<ReviewDTO>>> =
         CommonResponse(reviewService.findAll(pageRequest.getPageable()))
+
+    @GetMapping("/{id}")
+    fun findByOne(@PathVariable @Valid @NotBlank id: UUID): CommonResponse<ReviewDTO> =
+        CommonResponse(reviewService.findByOne(id))
 
 
     @PostMapping

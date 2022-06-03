@@ -15,6 +15,9 @@ class ReqQnaSaveDTO(
     @NotBlank
     val usrId: UUID,
 
+    @NotBlank
+    val productCode: String,
+
     @NotNull
     val type: QnaTypeEnum,
 
@@ -27,10 +30,9 @@ class ReqQnaSaveDTO(
     @NotBlank
     val question: String
 
-
 ) {
 
-    fun toEntity(productCode: String): Qna =
+    fun toEntity(): Qna =
         Qna(usrId, ProductCode(productCode), type, secretState, title, question)
 
 }

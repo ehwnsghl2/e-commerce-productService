@@ -12,7 +12,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "review")
-@Where(clause = "deldate IS NOT NULL")
+@Where(clause = "deldate IS NULL")
 class Review(
 
     @Column(name = "usr_id", nullable = false)

@@ -1,5 +1,6 @@
 package com.brandjunhoe.productservice.review.application.dto
 
+import com.brandjunhoe.productservice.review.domain.Review
 import com.brandjunhoe.productservice.review.domain.ReviewImage
 import com.brandjunhoe.productservice.review.domain.enums.ReviewTypeEnum
 
@@ -16,4 +17,6 @@ class ReviewDTO(
 
     val images: List<ReviewImage>? = null
 
-)
+) {
+    constructor(review: Review) : this(review.type, review.score, review.contents, review.images)
+}

@@ -5,7 +5,7 @@ package com.brandjunhoe.productservice.review.application.dto
  */
 class ReviewTotalDTO(
 
-    val scoreAvg: Float,
+    val scoreAvg: Double,
 
     val count: Int
 
