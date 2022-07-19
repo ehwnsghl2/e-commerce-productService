@@ -25,7 +25,7 @@ class ProductItemQuantityMinusConsumer(
     )
     override fun onMessage(data: ConsumerRecord<String, String>, acknowledgment: Acknowledgment?) {
         val data = objectMapper.readValue(data.value(), ProductItemQuantityMinusUpdateDTO::class.java)
-        productService.updateProductItemStockMinus(data)
+        productService.updateProductItemStock(data)
         acknowledgment?.acknowledge()
     }
 

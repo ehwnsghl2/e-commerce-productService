@@ -12,5 +12,4 @@ class ReviewImage(path: String) {
     @Column(name = "path")
     private val path: String = path
 
-
 }

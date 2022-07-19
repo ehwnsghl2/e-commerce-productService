@@ -1,9 +1,11 @@
 package com.brandjunhoe.productservice.product.domain
 
+import com.brandjunhoe.productservice.category.domain.Category
 import com.brandjunhoe.productservice.category.domain.CategoryCode
 import com.brandjunhoe.productservice.common.domain.DateColumnEntity
 import com.brandjunhoe.productservice.product.domain.enums.ProductGradeLimitEnum
 import com.brandjunhoe.productservice.product.domain.enums.ProductTypeEnum
+import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.Where
 import javax.persistence.*
@@ -16,18 +18,19 @@ class Product(
     @EmbeddedId
     val productCode: ProductCode,
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    /*@CollectionTable(
-        name = "product_category",
-        joinColumns = [JoinColumn(name = "product_code", nullable = false)],
-    )*/
+    /*@BatchSize(size = 100)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
     @JoinTable(
         name = "product_category",
+        joinColumns = [JoinColumn(name = "product_code", nullable = false,)],
+        inverseJoinColumns = [JoinColumn(name = "category_code", nullable = false)]
+    ) */
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
+        name = "product_category",
         joinColumns = [JoinColumn(name = "product_code", nullable = false)],
-        //inverseJoinColumns = [JoinColumn(name = "category_code", nullable = false)]
     )
-    val categoryCodes: Set<CategoryCode>,
-
+    val category: Set<CategoryCode>,
 
     @Column(name = "name", length = 100)
     val name: String,
@@ -38,7 +41,6 @@ class Product(
     val type: ProductTypeEnum = ProductTypeEnum.PRODUCT,
     //@Convert(converter = ProductTypeConverter::class)
     //val type: String,
-
 
     @Column(name = "summary", nullable = false)
     val summary: String,
@@ -81,7 +83,8 @@ class Product(
     @Column(name = "memo")
     val memo: String? = null,
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "product", cascade = [CascadeType.PERSIST])
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "product", cascade = [CascadeType.PERSIST], optional = false)
+    //@JoinColumn(name = "product_code", nullable = false)
     val mainImage: ProductMainImage,
 
     /* @ElementCollection
@@ -89,12 +92,16 @@ class Product(
      //@OrderColumn(name = "line_idx")
      val items: List<Item> = listOf()*/
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = [CascadeType.PERSIST])
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
+    @JoinColumn(name = "product_code", nullable = false)
     @Where(clause = "display_state = true")
     val items: List<Item> = listOf()
 
 
 ) : DateColumnEntity() {
+
+    @Version
+    var version: Long? = null
 
     @Column(name = "review_count", nullable = false)
     var reviewCount: Int? = null
@@ -114,15 +121,9 @@ class Product(
         this.reviewRating = reviewRating
     }
 
-    fun updateItemQuantityMinus(itemCode: String, quantity: Int) {
+    fun updateItemStockQuantity(itemCode: String, quantity: Int) {
         items.find { it.itemCode == ItemCode(itemCode) }
-            ?.let { item -> item.changeQuantityMinus(quantity) }
-    }
-
-    fun updateItemQuantityPlus(itemCode: String, quantity: Int) {
-        items.find { it.itemCode == ItemCode(itemCode) }
-            ?.let { item -> item.changeQuantityMinus(quantity) }
+            ?.also { item -> item.updateStockQuantity(quantity) }
     }
 
 }
-

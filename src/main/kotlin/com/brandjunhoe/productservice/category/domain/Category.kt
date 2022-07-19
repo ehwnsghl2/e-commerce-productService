@@ -31,6 +31,8 @@ class Category(
 
 ) : DateColumnEntity() {
 
+    @Version
+    var version: Long? = null
 
 }
 

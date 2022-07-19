@@ -14,10 +14,6 @@ class Item(
     @EmbeddedId
     val itemCode: ItemCode,
 
-    @ManyToOne(targetEntity = Product::class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_code")
-    val product: Product,
-
     @Column(name = "name", length = 255, nullable = false)
     val name: String,
 
@@ -49,11 +45,10 @@ class Item(
 
 ) : DateColumnEntity() {
 
-    fun changeQuantityMinus(quantity: Int) {
-        this.quantity.minus(quantity)
-    }
+    @Version
+    var version: Long? = null
 
-    fun changeQuantityPlus(quantity: Int) {
+    fun updateStockQuantity(quantity: Int) {
         this.quantity.plus(quantity)
     }
 

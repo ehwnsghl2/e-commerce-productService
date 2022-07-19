@@ -14,19 +14,16 @@ class CategoryService(val categoryRepository: CategoryRepository) {
 
 
     fun findAll(): List<CategoryDTO> {
-
         val categorys = categoryRepository.findAllByDisplayStateIsTrueOrderBySortAsc()
-
 
         return categorys.filter { it.depth == 1 }
             .map { it ->
                 CategoryDTO(
-                    categoryCode = it.categoryCode.categoryCode,
-                    name = it.name,
-                    refCategorys = getRefCategories(it.categoryCode.categoryCode, categorys.groupBy { it.ref })
+                    it.categoryCode.categoryCode,
+                    it.name,
+                    getRefCategories(it.categoryCode.categoryCode, categorys.groupBy { it.ref })
                 )
             }
-
     }
 
 
@@ -39,11 +36,10 @@ class CategoryService(val categoryRepository: CategoryRepository) {
                     getRefCategories(category.categoryCode.categoryCode, refCategorys)
                 )
             }
-        } ?: run { null }
+        }
 
 
     fun findRefCategorys(categoryCode: String): List<Category> =
         categoryRepository.findByCategoryCodeOrRefAndDisplayStateIsTrue(CategoryCode(categoryCode), categoryCode)
-
 
 }

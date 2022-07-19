@@ -20,7 +20,6 @@ abstract class ProductImage(
     @Column(columnDefinition = "BINARY(16)")
     val id: UUID = UUID.randomUUID(),
 
-
     @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "product_code", nullable = false)
     val product: Product? = null,

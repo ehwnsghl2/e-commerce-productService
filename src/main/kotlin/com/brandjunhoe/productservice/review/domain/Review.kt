@@ -40,9 +40,6 @@ class Review(
     @Column(name = "mileage")
     val mileage: Int,
 
-    @Version
-    val version: Int = 0,
-
     @ElementCollection
     @CollectionTable(name = "review_image", joinColumns = [JoinColumn(name = "review_id")])
     val images: List<ReviewImage>? = null,
@@ -54,6 +51,9 @@ class Review(
     val id: UUID = UUID.randomUUID()
 
 ) : DateDeleteColumnEntity() {
+
+    @Version
+    var version: Long? = null
 
 
 }

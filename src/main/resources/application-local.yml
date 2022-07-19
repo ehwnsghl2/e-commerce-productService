@@ -5,3 +5,10 @@ spring:
       fail-fast: true
   config:
     import: optional:configserver:http://localhost:8888
+
+logging:
+  level:
+    root: info
+    org.springframework.jdbc.datasource.SimpleDriverDataSource: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: DEBUG

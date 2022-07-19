@@ -31,9 +31,7 @@ class ProductController(
     @GetMapping("/category")
     fun findByCategoryProducts(@RequestParam(value = "categoryCode") @Valid @NotBlank categoryCode: String)
         : CommonResponse<List<ProductSearchDTO>> {
-
-        val categorys = categoryService.findRefCategorys(categoryCode).map { it.categoryCode.categoryCode }
-
+        val categorys = categoryService.findRefCategorys(categoryCode)
         return CommonResponse(productService.findCategoryProducts(categorys))
     }
 
