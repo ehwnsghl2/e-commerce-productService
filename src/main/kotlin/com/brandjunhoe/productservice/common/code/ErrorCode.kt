@@ -16,6 +16,7 @@ enum class ErrorCode(val status: Int, val code: Int?, val message: String) {
     QNA_ANSWER_NOT_CHANGE(HttpStatus.BAD_REQUEST.value(), 101,"qna not change was answer"),
     REVIEW_PHOTO_INPUT_VALUE(HttpStatus.BAD_REQUEST.value(), 102,"user password not maching"),
     REAVIEW_ALREADY(HttpStatus.BAD_REQUEST.value(), 103,"review was already"),
+    WISH_ALREADY(HttpStatus.BAD_REQUEST.value(), 104,"wish was already"),
 
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED.value(), 405,"해당 메서드는 해당되지 않습니다."),
     UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(), 415,"지원하지 않는 HTTP 메서드입니다"),

@@ -1,0 +1,20 @@
+GET http://localhost:9002/api/v1/wish/6efb1bf8-d3d3-472a-876e-223a2798eb56
+Content-Type: application/json
+
+
+###
+POST http://localhost:9002/api/v1/wish
+Content-Type: application/json
+
+{
+  "usrId" : "6efb1bf8-d3d3-472a-876e-223a2798eb56",
+  "productCode" : "codeby"
+}
+
+
+###
+DELETE http://localhost:9002/api/v1/wish/9d94a0ab-b4e8-484a-8951-a4f6ffa89573
+Content-Type: application/json
+
+
+###
